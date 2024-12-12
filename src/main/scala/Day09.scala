@@ -71,6 +71,7 @@ object Day09 {
 
     val maxId = diskAreas.collect { case File(_, id) => id }.max
 
+    @tailrec
     def defrag2(disk: Vector[Area], startId: Int): Vector[Area] = {
       if (startId >= 0) {
         val toMovePos = disk.lastIndexWhere {
