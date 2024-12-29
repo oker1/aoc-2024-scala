@@ -2,6 +2,7 @@ import java.nio.file.*
 import java.nio.charset.StandardCharsets
 import scala.annotation.tailrec
 import scala.runtime.Arrays
+import scala.util.Try
 
 object Day14 {
   def main(args: Array[String]): Unit = {
@@ -76,5 +77,41 @@ object Day14 {
         .values
         .reduce(_ * _)
     )
+
+    def drawRobots(robots: Iterable[Robot]): String = {
+      val byPos = robots.groupBy(_.position)
+
+      (for {
+        y <- Range(0, ySize)
+        x <- Range(0, xSize)
+      } yield {
+        val inRow = byPos.getOrElse(Pos(x, y), List.empty)
+
+        val res =
+          if (inRow.nonEmpty) {
+            "*"
+          } else {
+            "."
+          }
+
+        if (x == xSize - 1) {
+          s"$res\n"
+        } else {
+          res
+        }
+      }).mkString
+    }
+
+    val moveUntilLineFound = Stream.unfold(robots) { r =>
+      val next = r.map(_.move(1))
+      Some((next, next))
+    }
+
+    val (tree, index) = moveUntilLineFound.zipWithIndex.find { case (r, idx) =>
+      drawRobots(r).contains("*******************************")
+    }.get
+
+    println(drawRobots(tree))
+    println(index + 1)
   }
 }
