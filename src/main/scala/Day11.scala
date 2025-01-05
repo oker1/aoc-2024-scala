@@ -48,7 +48,7 @@ object Day11 {
       )
     }
 
-    // @tailrec
+    @tailrec
     def blinkDepthFirst(
         stone: Stone,
         queue: List[Stone],
